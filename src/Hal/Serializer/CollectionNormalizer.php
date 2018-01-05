@@ -48,7 +48,9 @@ final class CollectionNormalizer implements NormalizerInterface, NormalizerAware
      */
     public function supportsNormalization($data, $format = null)
     {
-        return self::FORMAT === $format && (\is_array($data) || ($data instanceof \Traversable));
+        $isResourceClass = is_object($data) && $this->resourceClassResolver->isResourceClass(get_class($data));
+
+        return self::FORMAT === $format && (\is_array($data) || ($data instanceof \Traversable)) && !$isResourceClass;
     }
 
     /**

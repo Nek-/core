@@ -45,7 +45,7 @@ final class ResourceClassResolver implements ResourceClassResolverInterface
                 $resourceClass = $typeToFind;
             }
         } elseif (null === $resourceClass) {
-            throw new InvalidArgumentException(sprintf('No resource class found.'));
+            throw new InvalidArgumentException('No resource class found.');
         } else {
             $typeToFind = $type = $resourceClass;
         }
@@ -70,7 +70,7 @@ final class ResourceClassResolver implements ResourceClassResolverInterface
     public function isResourceClass(string $type): bool
     {
         foreach ($this->resourceNameCollectionFactory->create() as $resourceClass) {
-            if ($type === $resourceClass) {
+            if ($type === $resourceClass || is_subclass_of($type, $resourceClass)) {
                 return true;
             }
         }
