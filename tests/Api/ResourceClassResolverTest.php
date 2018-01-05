@@ -21,6 +21,7 @@ use ApiPlatform\Core\Tests\Fixtures\TestBundle\Entity\Dummy;
 use ApiPlatform\Core\Tests\Fixtures\TestBundle\Entity\DummyCar;
 use ApiPlatform\Core\Tests\Fixtures\TestBundle\Entity\DummyTableInheritance;
 use ApiPlatform\Core\Tests\Fixtures\TestBundle\Entity\DummyTableInheritanceChild;
+use ApiPlatform\Core\Tests\Fixtures\TestBundle\Entity\DummyTraversable;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -171,5 +172,16 @@ class ResourceClassResolverTest extends TestCase
         $resourceClassResolver = new ResourceClassResolver($resourceNameCollectionFactoryProphecy->reveal());
 
         $this->assertEquals($resourceClassResolver->getResourceClass($t, DummyTableInheritance::class), DummyTableInheritanceChild::class);
+    }
+
+    public function testGetResourceClassWithTraversableClass()
+    {
+        $dummy = new DummyTraversable();
+        $resourceNameCollectionFactoryProphecy = $this->prophesize(ResourceNameCollectionFactoryInterface::class);
+        $resourceNameCollectionFactoryProphecy->create()->willReturn(new ResourceNameCollection([DummyTraversable::class]))->shouldBeCalled();
+
+        $resourceClassResolver = new ResourceClassResolver($resourceNameCollectionFactoryProphecy->reveal());
+        $resourceClass = $resourceClassResolver->getResourceClass($dummy, DummyTraversable::class);
+        $this->assertEquals($resourceClass, DummyTraversable::class);
     }
 }
