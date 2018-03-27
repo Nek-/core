@@ -51,7 +51,10 @@ final class PhpDocResourceMetadataFactory implements ResourceMetadataFactoryInte
 
         try {
             $docBlock = $this->docBlockFactory->create($reflectionClass, $this->contextFactory->createFromReflector($reflectionClass));
-            $resourceMetadata = $resourceMetadata->withDescription($docBlock->getSummary());
+
+            if (null === $resourceMetadata->getDescription()) {
+                $resourceMetadata = $resourceMetadata->withDescription($docBlock->getSummary());
+            }
         } catch (\InvalidArgumentException $e) {
             // Ignore empty DocBlocks
         }
